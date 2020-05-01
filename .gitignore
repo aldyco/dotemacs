@@ -1,0 +1,30 @@
+# current directories
+auto-save-list
+backup
+bookmarks
+elpa
+eshell
+indium-chrome-profile
+layouts
+snippets
+sublimity-master
+transient
+url
+
+# personal files / completion
+ido.last
+recentf
+tramp
+logview-cache.extmap
+network-security.data
+projectile-bookmarks.eld
+projectile.cache
+
+.extension
+.dap-breakpoints
+.lsp-session-v1
+
+*.zip
+
+# temporary files
+*~
