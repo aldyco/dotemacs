@@ -19,7 +19,7 @@
 	 ;; more major-mode checking here
 
 	 ;; if not in ivy then call search
-	 (t (if (fboundp 'swiper) (swiper) (isearch-forward)))))
+	 (t (if (fboundp 'swiper) (swiper) (isearch-forward))))))
 #+END_SRC
 
 
