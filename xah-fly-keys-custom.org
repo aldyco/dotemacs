@@ -14,12 +14,12 @@
 					 (not (file-exists-p ivy--default))
 					 (not (ivy-ffap-url-p ivy--default))
 					 (not (ivy-state-dynamic-collection ivy-last))
-					 (> (point) (minibuffer-prompt-end)) (ivy-next-history-element ""))
+					 (> (point) (minibuffer-prompt-end))) (ivy-next-history-element ""))
 	 ;; ((active-minibuffer-window) (ivy-next-history-element ""))
 	 ;; more major-mode checking here
 
 	 ;; if not in ivy then call search
-	 (t (if (fboundp 'swiper) (swiper) (isearch-forward))))))
+	 (t (if (fboundp 'swiper) (swiper) (isearch-forward)))))
 #+END_SRC
 
 
