@@ -1,0 +1,52 @@
+#+TITLE: Xah Fly Keys Customization
+
+* Custom Wrapper to check Major Mode
+
+** Swiper mini buffer
+
+#+BEGIN_SRC emacs-lisp
+  (defun swiper-wrapper ()
+	"call different commands depending on what's current major mode."
+	(interactive)
+	(cond
+	 ((and (with-ivy-window (derived-mode-p 'prog-mode))
+					 (eq (ivy-state-caller ivy-last) 'swiper)
+					 (not (file-exists-p ivy--default))
+					 (not (ivy-ffap-url-p ivy--default))
+					 (not (ivy-state-dynamic-collection ivy-last))
+					 (> (point) (minibuffer-prompt-end)) (ivy-next-history-element ""))
+	 ;; ((active-minibuffer-window) (ivy-next-history-element ""))
+	 ;; more major-mode checking here
+
+	 ;; if not in ivy then call search
+	 (t (if (fboundp 'swiper) (swiper) (isearch-forward)))))
+#+END_SRC
+
+
+* My Own Custom Keymaps
+
+
+* Enable Xah Fly Keys
+
+Xah-fly-keys keybinding
+#+BEGIN_SRC emacs-lisp
+  (use-package xah-fly-keys
+	:ensure t
+	:init
+	(require 'xah-fly-keys)
+	:config
+	(xah-fly-keys-set-layout "qwerty") ; required
+	(xah-fly-keys 1)
+	(define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+	(defun my-bindkey-xfk-command-mode ()
+	  "Define keys for `xah-fly-command-mode-activate-hook'"
+	  (interactive)
+	  (define-key xah-fly-key-map (kbd "a")
+		(if (fboundp 'counsel-M-x) 'counsel-M-x 'execute-extended-command))
+	  (define-key xah-fly-key-map (kbd "n")
+		'swiper-wrapper)
+	  (define-key xah-fly-key-map (kbd "SPC /") 'cljr-slash)
+	  (define-key xah-fly-key-map  (kbd "/") 'xah-goto-matching-bracket))
+	(add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
+	)
+#+END_SRC

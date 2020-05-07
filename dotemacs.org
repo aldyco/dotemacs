@@ -89,29 +89,6 @@ Garbage-collect on focus-out, Emacs /should/ feel snappier.
 (add-hook 'focus-out-hook #'garbage-collect)
 #+END_SRC
 
-Xah-fly-keys keybinding
-#+BEGIN_SRC emacs-lisp
-  (use-package xah-fly-keys
-    :ensure t
-	:init
-	(require 'xah-fly-keys)
-    :config
-    (xah-fly-keys-set-layout "qwerty") ; required
-    (xah-fly-keys 1)
-    (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-    (defun my-bindkey-xfk-command-mode ()
-      "Define keys for `xah-fly-command-mode-activate-hook'"
-      (interactive)
-      (define-key xah-fly-key-map (kbd "a")
-	(if (fboundp 'counsel-M-x) 'counsel-M-x 'execute-extended-command))
-      (define-key xah-fly-key-map (kbd "n")
-	(if (fboundp 'me/swiper) 'me/swiper 'isearch-forward))
-      (define-key xah-fly-key-map (kbd "SPC /") 'cljr-slash)
-      (define-key xah-fly-key-map  (kbd "/") 'xah-goto-matching-bracket))
-    (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
-  )
-#+END_SRC
-
 ** Load =.custom.el=
 
 One is able to use the customization interface that is bundled within Emacs. It
@@ -151,6 +128,15 @@ and =user-mail-address=. This is also where you want your API tokens to live.
     (load secret.el)))
 #+END_SRC
 
+** Load =xah-fly-keys-custom.org=
+
+I use xah fly keys keybinding and add my personal modification in this file
+
+#+BEGIN_SRC emacs-lisp
+  (let ((xah-fly-keys-custom.org (expand-file-name "xah-fly-keys-custom.org" user-emacs-directory)))
+	(when (file-exists-p xah-fly-keys-custom.org)
+	  (org-babel-load-file xah-fly-keys-custom.org)))
+#+END_SRC
 
 
 * Theme
