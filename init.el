@@ -20,9 +20,9 @@
 
   ;; Set explicit priorities (gnu is the default package-archive)
   (setq package-archive-priorities '(("org" . 4)
-									 ("melpa" . 3)
-									 ("melpa-stable" . 2)
-									 ("gnu" . 1)))
+                   ("melpa" . 3)
+                   ("melpa-stable" . 2)
+                   ("gnu" . 1)))
 
   ;; Install dependencies
   (unless (package-installed-p 'use-package)
@@ -33,10 +33,14 @@
    use-package-always-ensure t)
 
   (use-package use-package-ensure-system-package
-	:ensure t)
+  :ensure t)
 
   ;; Use latest Org
   (use-package org :ensure org-plus-contrib)
+
+  ;; disable emacs asking following git symbolink
+  (setq vc-follow-symlinks nil)
+
 
   ;; Tangle configuration
   (org-babel-load-file (expand-file-name "dotemacs.org" user-emacs-directory))
