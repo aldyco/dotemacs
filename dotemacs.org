@@ -821,7 +821,4 @@ replace.
 
   ;; debugger for lsp
   (use-package dap-mode)
-
-  ;; lsp completion
-  (use-package company-capf)
 #+end_src
