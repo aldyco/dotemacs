@@ -52,7 +52,9 @@ Here are what I consider better defaults as per my own experience.
    magit-diff-refine-hunk t
    ispell-program-name "aspell"
    load-prefer-newer t
-   line-spacing 3
+   ;; line-spacing 3
+   display-line-numbers-type 'relative               ; relative line number
+   display-line-numbers-current-absolute t           ; current line still show current line number
 
    ;; Indentation
    typescript-indent-level 2
@@ -200,10 +202,8 @@ Load theme and fix some high-level faces to match my personal preferences.
 #+BEGIN_SRC emacs-lisp
   (use-package doom-themes
     :demand t
-    :custom
-    (doom-themes-enable-bold nil)
     :config
-    (load-theme 'doom-horizon t)
+    (load-theme 'doom-vibrant t)
     (doom-themes-visual-bell-config)
     (doom-themes-neotree-config)
     (doom-themes-org-config)
@@ -235,6 +235,8 @@ Load theme and fix some high-level faces to match my personal preferences.
       (set-face-attribute 'magit-diff-removed nil :background 'unspecified))
     (with-eval-after-load 'swiper
       (set-face-attribute 'swiper-match-face-1 nil :background (doom-color 'bg-alt)))
+    (with-eval-after-load 'swiper-isearch
+      (set-face-attribute 'swiper-isearch-match-face-1 nil :background (doom-color 'bg-alt)))
     )
 #+END_SRC
 
@@ -247,6 +249,21 @@ Load theme and fix some high-level faces to match my personal preferences.
     (doom-themes-visual-bell-config)
     (load-theme 'kaolin-bubblegum t))
 #+END_SRC
+
+** Solaire mode
+
+Helps visually distinguish file-visiting windows from other types of windows (like popups or sidebars) by giving them a slightly different -- often brighter -- background.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package solaire-mode
+    :hook
+    ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
+    (minibuffer-setup . solaire-mode-in-minibuffer)
+    :config
+    (solaire-global-mode +1)
+    (solaire-mode-swap-bg))
+#+END_SRC
+
 
 
 * General
@@ -399,6 +416,10 @@ Augment Ivy's interface with details for candidates.
     :config
     (counsel-projectile-mode 1)
     (setq-default ivy-initial-inputs-alist nil))
+
+  (use-package rg
+    :ensure-system-package
+    (rg . ripgrep))
 #+END_SRC
 
 ** Ivy / Swiper
@@ -562,7 +583,7 @@ binaries (see [[./README.org][README.org]]).
       '(bar me/buffer-name info-nodes me/buffer-position selection-info)
       '(irc-buffers matches process me/major-mode workspace-name))
     (doom-modeline-def-modeline 'main
-      '(bar modals me/buffer-name remote-host me/buffer-position checker selection-info)
+      '(bar buffer-info remote-host me/buffer-position checker selection-info)
       '(irc-buffers matches process vcs me/major-mode workspace-name misc-info))
     (doom-modeline-def-modeline 'message
       '(bar me/buffer-name-simple me/buffer-position selection-info)
@@ -722,6 +743,19 @@ replace.
     :ensure t
     :hook
     (after-init . which-key-mode))
+#+END_SRC
+
+** Window-purpose
+
+#+BEGIN_SRC emacs-lisp
+  (use-package window-purpose
+    :init
+    (purpose-mode)
+    :config
+    (add-to-list 'purpose-user-mode-purposes '(clojure-mode . clj))
+    (add-to-list 'purpose-user-mode-purposes '(cider-repl-mode . cider))
+    (purpose-compile-user-configuration) ; activates your changes
+    (purpose-x-kill-setup))
 #+END_SRC
 
 ** Zop-to-char
