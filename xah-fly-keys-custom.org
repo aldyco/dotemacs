@@ -1,12 +1,17 @@
 #+TITLE: Xah Fly Keys Customization
 
+Enable xah-fly-keys in emacs
+#+BEGIN_SRC emacs-lisp
+  (require 'xah-fly-keys)
+#+END_SRC
+
 * Custom Wrapper to check Major Mode
 
 ** Swiper mini buffer
 
 #+BEGIN_SRC emacs-lisp
   (defun swiper-wrapper ()
-    "call different commands depending on what's current major mode."
+    "call different swiper commands depending on what's current major mode."
     (interactive)
     (cond
      ;; ((and (with-ivy-window (derived-mode-p 'prog-mode))
@@ -24,31 +29,46 @@
 
      ;; if not in ivy then call search
      (t (if (fboundp 'swiper) (swiper) (isearch-forward)))))
+
+  (defun cider-eval-wrapper ()
+    "call different eval commands depending on cider minor mode."
+    (interactive)
+    (cond
+     ((bound-and-true-p cider-mode) (cider-eval-last-sexp))
+
+     (t (eval-last-sexp nil))))
 #+END_SRC
 
 
 * My Own Custom Keymaps
+#+BEGIN_SRC emacs-lisp
+  (define-prefix-command 'my-eval-keymap)
+  (define-key my-eval-keymap (kbd "e") 'cider-eval-wrapper)
+  (define-key my-eval-keymap (kbd "p") 'cider-pprint-eval-last-sexp-to-comment)
+  (define-key my-eval-keymap (kbd "r") 'cider-insert-last-sexp-in-repl)
+  (define-key my-eval-keymap (kbd "n") 'cider-repl-set-ns)
 
+
+#+END_SRC
 
 * Enable Xah Fly Keys
 
 Xah-fly-keys keybinding
 #+BEGIN_SRC emacs-lisp
   (use-package xah-fly-keys
-  :ensure t
-  :init
-  (require 'xah-fly-keys)
   :config
   (xah-fly-keys-set-layout "qwerty") ; required
   (xah-fly-keys 1)
   (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+  (define-key xah-fly-leader-key-map (kbd "DEL") 'universal-argument)
+  ;; make xah-fly-keys 【leader e】 qwerty as prefix for my-eval-keymap
+  (define-key xah-fly-leader-key-map (kbd "e") 'my-eval-keymap)
   (defun my-bindkey-xfk-command-mode ()
     "Define keys for `xah-fly-command-mode-activate-hook'"
     (interactive)
     (define-key xah-fly-key-map (kbd "a")
     (if (fboundp 'counsel-M-x) 'counsel-M-x 'execute-extended-command))
-    (define-key xah-fly-key-map (kbd "n")
-    'swiper-wrapper)
+    (define-key xah-fly-key-map (kbd "n") 'swiper-wrapper)
     (define-key xah-fly-key-map (kbd "SPC /") 'cljr-slash)
     (define-key xah-fly-key-map  (kbd "/") 'xah-goto-matching-bracket))
   (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)

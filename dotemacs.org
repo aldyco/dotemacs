@@ -321,6 +321,16 @@ Helps visually distinguish file-visiting windows from other types of windows (li
     :hook (company-mode . company-box-mode))
 #+END_SRC
 
+** Dimmer
+#+BEGIN_SRC emacs-lisp
+  (use-package dimmer
+    :init
+    (dimmer-mode t)
+    :config
+    (dimmer-configure-which-key)
+    (dimmer-configure-company-box)
+    (setq dimmer-fraction 0.4))
+#+END_SRC
 ** Highlight
 
 #+BEGIN_SRC emacs-lisp
@@ -773,27 +783,32 @@ replace.
 ** Clojure
 
 #+BEGIN_SRC emacs-lisp
-    (use-package clj-refactor
-      :config
-      (defun my-clojure-mode-hook ()
-        (clj-refactor-mode 1)
-        (yas-minor-mode 1) ; for adding require/use/import statements
-        ;; This choice of keybinding leaves cider-macroexpand-1 unbound
-        (cljr-add-keybindings-with-prefix "C-c C-m")
-        (define-key clj-refactor-map (kbd "/") nil))
-      (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
+  (use-package clojure-mode-extra-font-locking
+    :init
+    (require 'clojure-mode-extra-font-locking))
 
-    (use-package cider
-      :init
-      (setq clojure-align-forms-automatically t)
-      (setq cider-eval-toplevel-inside-comment-form t)
-      (setq cider-invert-insert-eval-p t)
-      (setq cider-switch-to-repl-after-insert-p nil)
-      :config
-      (when (fboundp `cider-mode)
-        (setq cider-print-fn nil))
-      (setq nrepl-log-messages t)
-      )
+  (use-package clj-refactor
+    :config
+    (defun my-clojure-mode-hook ()
+      (clj-refactor-mode 1)
+      (yas-minor-mode 1) ; for adding require/use/import statements
+      ;; This choice of keybinding leaves cider-macroexpand-1 unbound
+      (cljr-add-keybindings-with-prefix "C-c C-m")
+      (define-key clj-refactor-map (kbd "/") nil))
+    (add-hook 'clojure-mode-hook #'my-clojure-mode-hook))
+
+  (use-package cider
+    :init
+    (setq clojure-align-forms-automatically t
+          cider-font-lock-dynamically t
+          cider-eval-toplevel-inside-comment-form t
+          cider-invert-insert-eval-p t
+          cider-switch-to-repl-on-insert nil)
+    :config
+    (when (fboundp `cider-mode)
+      (setq cider-print-fn 'fipp))
+    (setq nrepl-log-messages t)
+    )
 #+END_SRC
 
 ** Golang

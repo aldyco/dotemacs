@@ -165,13 +165,13 @@
   "Open NeoTree using the git root."
   (interactive)
   (let ((project-dir (projectile-project-root))
-	(file-name (buffer-file-name)))
+  (file-name (buffer-file-name)))
     (neotree-toggle)
     (if project-dir
-	(if (neo-global--window-exists-p)
-	    (progn
-	      (neotree-dir project-dir)
-	      (neotree-find file-name)))
+  (if (neo-global--window-exists-p)
+      (progn
+        (neotree-dir project-dir)
+        (neotree-find file-name)))
       (message "Could not find git project root."))))
 
 (setq neo-autorefresh nil)
@@ -226,7 +226,7 @@ If the new path's directories does not exist, create them."
 ;; (smart-tabs-add-language-support clojure clojure-mode-hook
   ;; ((clojure-indent-line . clojure-basic-offset)
    ;; (clojure-indent-region . clojure-basic-offset)))
-;; 
+;;
 ;; (smart-tabs-insinuate 'c 'javascript 'clojure)
 
 (org-babel-do-load-languages
@@ -263,7 +263,7 @@ If the new path's directories does not exist, create them."
     (if (fboundp 'swiper) 'swiper 'isearch-forward))
   (define-key xah-fly-key-map (kbd "SPC /") 'cljr-slash)
   (define-key xah-fly-key-map  (kbd "/") 'xah-goto-matching-bracket)
- 
+
   ;; more here
   )
 
@@ -280,8 +280,8 @@ If the new path's directories does not exist, create them."
       ;; (get-buffer candidate)
     ;; (let ((icon (all-the-icons-icon-for-mode major-mode)))
       ;; (if (symbolp icon)
-	  ;; (all-the-icons-icon-for-mode 'fundamental-mode)
-	;; icon))))
+    ;; (all-the-icons-icon-for-mode 'fundamental-mode)
+  ;; icon))))
 
 ;; (setq ivy-rich--display-transformers-list
       ;; '(ivy-switch-buffer
@@ -297,11 +297,11 @@ If the new path's directories does not exist, create them."
          ;; (lambda (cand) (get-buffer cand)))))
 
 
-;; company   
+;; company
 (global-company-mode 1)
 (add-hook 'after-init-hook 'global-company-mode)
 (setq company-idle-delay 0)
-(setq company-minimum-prefix-length 3)   
+(setq company-minimum-prefix-length 3)
 ;; (add-hook 'cider-repl-mode-hook #'company-mode)
 ;; (add-hook 'cider-mode-hook #'company-mode)
 ;; (add-hook 'clojure-mode-hook #'company-mode)
@@ -328,7 +328,7 @@ If the new path's directories does not exist, create them."
 (beacon-mode 1)
 (add-hook 'prog-mode-hook #'focus-mode)
 
-(setq dimmer-fraction 0.5)
+(setq dimmer-fraction 0.4)
 
 
 ;; spaceline
@@ -380,7 +380,7 @@ If the new path's directories does not exist, create them."
 (define-key js-mode-map (kbd "M-.") nil)
 
 (add-hook 'js2-mode-hook (lambda ()
-			   (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
+         (add-hook 'xref-backend-functions #'xref-js2-xref-backend nil t)))
 
 ;; (require 'company-tern)
 
@@ -388,7 +388,7 @@ If the new path's directories does not exist, create them."
 ;; (add-hook 'js2-mode-hook (lambda ()
                            ;; (tern-mode)
                            ;; (company-mode)))
-                           
+
 ;; Disable completion keybindings, as we use xref-js2 instead
 ;; (define-key tern-mode-keymap (kbd "M-.") nil)
 ;; (define-key tern-mode-keymap (kbd "M-,") nil)
@@ -460,7 +460,7 @@ If the new path's directories does not exist, create them."
       '(("erb"  . (("beg" "end")))
         ("php"  . (("beg" "end")
                    ("beg" "end")))
-	))
+  ))
 
 (add-hook 'web-mode-hook #'(lambda () (yas-activate-extra-mode 'html-mode)))
 
@@ -493,13 +493,13 @@ If the new path's directories does not exist, create them."
 (add-hook 'web-mode-before-auto-complete-hooks
     '(lambda ()
      (let ((web-mode-cur-language
-  	    (web-mode-language-at-pos)))
+        (web-mode-language-at-pos)))
                (if (string= web-mode-cur-language "php")
-    	   (yas-activate-extra-mode 'php-mode)
-      	 (yas-deactivate-extra-mode 'php-mode))
+         (yas-activate-extra-mode 'php-mode)
+         (yas-deactivate-extra-mode 'php-mode))
                (if (string= web-mode-cur-language "css")
-    	   (setq emmet-use-css-transform t)
-      	   (setq emmet-use-css-transform nil)))))
+         (setq emmet-use-css-transform t)
+           (setq emmet-use-css-transform nil)))))
 
 
 ;; go-mode
@@ -562,4 +562,3 @@ If the new path's directories does not exist, create them."
     (cons 340 "#6272a4")
     (cons 360 "#6272a4")))
  '(vc-annotate-very-old-color nil))
-
