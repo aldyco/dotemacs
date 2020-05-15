@@ -8,7 +8,6 @@ Enable xah-fly-keys in emacs
 * Custom Wrapper to check Major Mode
 
 ** Swiper mini buffer
-
 #+BEGIN_SRC emacs-lisp
   (defun swiper-wrapper ()
     "call different swiper commands depending on what's current major mode."
@@ -47,30 +46,35 @@ Enable xah-fly-keys in emacs
   (define-key my-eval-keymap (kbd "p") 'cider-pprint-eval-last-sexp-to-comment)
   (define-key my-eval-keymap (kbd "r") 'cider-insert-last-sexp-in-repl)
   (define-key my-eval-keymap (kbd "n") 'cider-repl-set-ns)
-
-
 #+END_SRC
+
 
 * Enable Xah Fly Keys
 
 Xah-fly-keys keybinding
 #+BEGIN_SRC emacs-lisp
   (use-package xah-fly-keys
-  :config
-  (xah-fly-keys-set-layout "qwerty") ; required
-  (xah-fly-keys 1)
-  (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
-  (define-key xah-fly-leader-key-map (kbd "DEL") 'universal-argument)
-  ;; make xah-fly-keys 【leader e】 qwerty as prefix for my-eval-keymap
-  (define-key xah-fly-leader-key-map (kbd "e") 'my-eval-keymap)
-  (defun my-bindkey-xfk-command-mode ()
-    "Define keys for `xah-fly-command-mode-activate-hook'"
-    (interactive)
-    (define-key xah-fly-key-map (kbd "a")
-    (if (fboundp 'counsel-M-x) 'counsel-M-x 'execute-extended-command))
-    (define-key xah-fly-key-map (kbd "n") 'swiper-wrapper)
-    (define-key xah-fly-key-map (kbd "SPC /") 'cljr-slash)
-    (define-key xah-fly-key-map  (kbd "/") 'xah-goto-matching-bracket))
-  (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode)
-  )
+    :config
+    (xah-fly-keys-set-layout "qwerty") ; required
+    (xah-fly-keys 1)
+    (define-key key-translation-map (kbd "ESC") (kbd "C-g"))
+    ;; make xah-fly-keys 【leader u】 (qwerty) as prefix command same as C-u
+    (define-key xah-fly-leader-key-map (kbd "u") 'universal-argument)
+    ;; make xah-fly-keys 【leader m】 (qwerty) to run magit
+    (define-key xah-fly-leader-key-map (kbd "m") 'magit-status)
+    ;; make xah-fly-keys 【leader e】 (qwerty) as prefix for my-eval-keymap
+    (define-key xah-fly-leader-key-map (kbd "e") 'my-eval-keymap)
+    ;; make xah-fly-keys 【leader p】 (qwerty) as prefix for projectile-key-map
+    ;; *TODO* bound only when projectile available
+    (define-key xah-fly-leader-key-map (kbd "p") 'projectile-command-map)
+    (defun my-bindkey-xfk-command-mode ()
+      "Define keys for `xah-fly-command-mode-activate-hook'"
+      (interactive)
+      (define-key xah-fly-key-map (kbd "a")
+        (if (fboundp 'counsel-M-x) 'counsel-M-x 'execute-extended-command))
+      (define-key xah-fly-key-map (kbd "n") 'swiper-wrapper)
+      (define-key xah-fly-key-map (kbd "SPC /") ;; remap clj refactor "/" to "SPC /"
+        (if (bound-and-true-p clj-refactor-mode) 'cljr-slash))
+      (define-key xah-fly-key-map  (kbd "/") 'xah-goto-matching-bracket))
+    (add-hook 'xah-fly-command-mode-activate-hook 'my-bindkey-xfk-command-mode))
 #+END_SRC

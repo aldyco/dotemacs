@@ -421,11 +421,11 @@ Augment Ivy's interface with details for candidates.
     :config
     (counsel-mode 1)
     (setq-default ivy-initial-inputs-alist nil))
+
   (use-package counsel-projectile
-    :after ivy
+    :after counsel projectile
     :config
-    (counsel-projectile-mode 1)
-    (setq-default ivy-initial-inputs-alist nil))
+    (counsel-projectile-mode 1))
 
   (use-package rg
     :ensure-system-package
@@ -435,13 +435,13 @@ Augment Ivy's interface with details for candidates.
 ** Ivy / Swiper
 
 #+BEGIN_SRC emacs-lisp
-(use-package swiper
-  :preface
-  (defun me/swiper ()
-  "`swiper' with string returned by `ivy-thing-at-point' as initial input."
-  (interactive)
-  (swiper (ivy-thing-at-point)))
-  :custom (swiper-goto-start-of-match t))
+  (use-package swiper
+    :preface
+    (defun me/swiper ()
+      "`swiper' with string returned by `ivy-thing-at-point' as initial input."
+      (interactive)
+      (swiper (ivy-thing-at-point)))
+    :custom (swiper-goto-start-of-match t))
 #+END_SRC
 
 ** Lines
@@ -664,15 +664,16 @@ replace.
 
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
-  :hook
-  (after-init . projectile-global-mode)
-  :init
-  (setq-default
-   projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
-   projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
-  (setq projectile-completion-system 'ivy)
-  :custom
-  (projectile-enable-caching t))
+    :hook
+    (after-init . projectile-global-mode)
+    :init
+    (setq-default
+     projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
+     projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
+    (setq projectile-completion-system 'ivy
+          projectile-project-search-path '("~/github/" "~/zenius/"))
+    :custom
+    (projectile-enable-caching t))
 #+END_SRC
 
 ** Quality of Life
@@ -734,6 +735,7 @@ replace.
   (require 'smartparens-config)
   (show-paren-mode 1))
 #+END_SRC
+
 ** Undo-tree
 
 #+BEGIN_SRC emacs-lisp
@@ -755,6 +757,18 @@ replace.
     (after-init . which-key-mode))
 #+END_SRC
 
+** Zop-to-char
+
+#+BEGIN_SRC emacs-lisp
+  (use-package zop-to-char
+    :ensure t
+    :bind (("M-z" . zop-up-to-char)
+           ("M-Z" . zop-to-char)))
+#+END_SRC
+
+
+* Workspace
+
 ** Window-purpose
 
 #+BEGIN_SRC emacs-lisp
@@ -768,13 +782,23 @@ replace.
     (purpose-x-kill-setup))
 #+END_SRC
 
-** Zop-to-char
+** Perspective
 
 #+BEGIN_SRC emacs-lisp
-  (use-package zop-to-char
-    :ensure t
-    :bind (("M-z" . zop-up-to-char)
-           ("M-Z" . zop-to-char)))
+  (use-package perspective
+    :init
+    (require 'persp-projectile)
+    :after counsel ivy
+    :config
+    (persp-mode)
+    (define-key ivy-mode-map [remap switch-to-buffer] 'persp-ivy-switch-buffer))
+#+END_SRC
+
+** Persp-projectile
+
+#+BEGIN_SRC emacs-lisp
+  (use-package persp-projectile
+    :after projectile)
 #+END_SRC
 
 
