@@ -42,11 +42,10 @@
   (setq vc-follow-symlinks nil)
 
   ;; set correct path shell
-  (use-package exec-path-from-shell
-    :init
-    (when (memq window-system '(mac ns x))
-      (exec-path-from-shell-initialize)))
-
+  ;; (use-package exec-path-from-shell
+  ;;   :init
+  ;;   (when (memq window-system '(mac ns x))
+  ;;     (exec-path-from-shell-initialize)))
 
   ;; Tangle configuration
   (org-babel-load-file (expand-file-name "dotemacs.org" user-emacs-directory))
