@@ -173,7 +173,7 @@ and =user-mail-address=. This is also where you want your API tokens to live.
 (defvar me/erc-password           nil        "The ERC password to use.")
 (defvar me/erc-port               nil        "The ERC port to use.")
 (defvar me/erc-server             nil        "The ERC server to use.")
-(defvar me/font-family            "Source Code Pro"  "The font to use.")
+(defvar me/font-family            "JetBrains Mono"  "The font to use.")
 (defvar me/font-size-default      110        "The font size to use for default text.")
 (defvar me/font-size-small        100        "The font size to use for smaller text.")
 
