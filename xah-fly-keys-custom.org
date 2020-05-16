@@ -64,6 +64,8 @@ Xah-fly-keys keybinding
     (define-key xah-fly-leader-key-map (kbd "m") 'magit-status)
     ;; make xah-fly-keys 【leader e】 (qwerty) as prefix for my-eval-keymap
     (define-key xah-fly-leader-key-map (kbd "e") 'my-eval-keymap)
+    ;; make xah-fly-keys 【leader w】 (qwerty) as prefix for persp-map
+    (define-key xah-fly-leader-key-map (kbd "w") 'perspective-map)
     ;; make xah-fly-keys 【leader p】 (qwerty) as prefix for projectile-key-map
     ;; *TODO* bound only when projectile available
     (define-key xah-fly-leader-key-map (kbd "p") 'projectile-command-map)

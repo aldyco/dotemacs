@@ -30,7 +30,7 @@ Here are what I consider better defaults as per my own experience.
    fill-column 80                                   ; Set width for automatic line breaks
    help-window-select t                             ; Focus new help windows when opened
    indent-tabs-mode nil                             ; Stop using tabs to indent
-   inhibit-startup-screen t                         ; Disable start-up screen
+   ;; inhibit-startup-screen t                         ; Disable start-up screen
    initial-scratch-message ""                       ; Empty the initial *scratch* buffer
    ;; mouse-yank-at-point t                            ; Yank at point rather than pointer
    ns-use-srgb-colorspace nil                       ; Don't use sRGB colors
@@ -769,6 +769,39 @@ replace.
 
 * Workspace
 
+** Dashboard
+
+   Dashboard startup screen
+#+BEGIN_SRC emacs-lisp
+  (use-package dashboard
+    :init
+    (setq dashboard-set-heading-icons t
+          dashboard-set-file-icons t
+          dashboard-set-navigator t
+          dashboard-set-init-info t
+          dashboard-startup-banner "/home/aldyco/Pictures/robot.png"
+          dashboard-image-banner-max-height 120
+          dashboard-items '((projects . 3)
+                            (recents  . 3)
+                            (bookmarks . 3)
+                            (agenda . 3)))
+    ;; (setq dashboard-navigator-buttons
+    ;;       `(;; line1
+    ;;         ((,(all-the-icons-octicon "mark-github" :height 1.1 :v-adjust 0.0)
+    ;;           "Homepage"
+    ;;           "Browse homepage"
+    ;;           (lambda (&rest _) (browse-url "homepage")))
+    ;;          ("★" "Star" "Show stars" (lambda (&rest _) (show-stars)) warning)
+    ;;          ("?" "" "?/h" #'show-help nil "<" ">"))
+    ;;         ;; line 2
+    ;;         ((,(all-the-icons-faicon "linkedin" :height 1.1 :v-adjust 0.0)
+    ;;           "Linkedin"
+    ;;           ""
+    ;;           (lambda (&rest _) (browse-url "homepage")))
+    ;;          ("⚑" nil "Show flags" (lambda (&rest _) (message "flag")) error))))
+    (dashboard-setup-startup-hook))
+#+END_SRC
+
 ** Window-purpose
 
 #+BEGIN_SRC emacs-lisp
@@ -791,7 +824,14 @@ replace.
     :after counsel ivy
     :config
     (persp-mode)
-    (define-key ivy-mode-map [remap switch-to-buffer] 'persp-ivy-switch-buffer))
+    (defun me/persp-ivy-switch-buffer (arg)
+      "A version of `persp-ivy-switch-buffer' which return all buffer respective to their perspectives if call with argument."
+      (interactive "P")
+      (declare-function persp--switch-buffer-ivy-counsel-helper "perspective.el")
+      (declare-function persp-switch-to-buffer "perspective.el")
+      (persp--switch-buffer-ivy-counsel-helper arg nil #'(lambda () (let ((buffer (read-buffer-to-switch "Switch to buffer: ")))
+                                                                      (persp-switch-to-buffer buffer)))))
+    (define-key ivy-mode-map [remap switch-to-buffer] 'me/persp-ivy-switch-buffer))
 #+END_SRC
 
 ** Persp-projectile
@@ -881,7 +921,10 @@ replace.
           lsp-prefer-flymake nil
           lsp-prefer-capf t
           read-process-output-max (* 1024 1024)
-          lsp-ui-doc-position 'bottom))
+          lsp-ui-doc-position 'bottom
+          ;; required to manually set path for bash-language-server executable
+          ;; *TODO* improve this
+          exec-path (append exec-path '("~/.nvm/versions/node/v8.17.0/bin"))))
 
   (use-package lsp-ui
     :commands lsp-ui-mode)
