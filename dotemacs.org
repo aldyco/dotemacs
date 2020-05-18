@@ -296,8 +296,9 @@ Helps visually distinguish file-visiting windows from other types of windows (li
     :config
     (global-company-mode 1)
     (setq company-idle-delay 0
-          company-minimum-prefix-length 2
+          company-minimum-prefix-length 1
           company-require-match 'never
+          company-show-numbers t
           ;; List modes for which company mode must be turned on.
           company-global-modes '(python-mode emacs-lisp-mode clojure-mode prog-mode cider-repl-mode))
 
@@ -314,9 +315,35 @@ Helps visually distinguish file-visiting windows from other types of windows (li
 
     (defun company-complete-common-wrapper ()
       (let ((completion-at-point-functions completion-at-point-functions-saved))
-        (company-complete-common))))
+        (company-complete-common)))
 
-  ; colorful company frontend
+    ;; use digit to select company candidates
+    ;; taken from https://oremacs.com/2017/12/27/company-numbers/
+    (let ((map company-active-map))
+      (mapc
+       (lambda (x)
+         (define-key map (format "%d" x) 'ora-company-number))
+       (number-sequence 0 9))
+      (define-key map " " (lambda ()
+                            (interactive)
+                            (company-abort)
+                            (self-insert-command 1)))
+      (define-key map (kbd "<return>") nil))
+
+    (defun ora-company-number ()
+      "Forward to `company-complete-number'.
+
+  Unless the number is potentially part of the candidate.
+  In that case, insert the number."
+      (interactive)
+      (let* ((k (this-command-keys))
+             (re (concat "^" company-prefix k)))
+        (if (cl-find-if (lambda (s) (string-match re s))
+                        company-candidates)
+            (self-insert-command 1)
+          (company-complete-number (string-to-number k))))))
+
+                                          ; colorful company frontend
   (use-package company-box
     :hook (company-mode . company-box-mode))
 #+END_SRC
@@ -880,13 +907,16 @@ replace.
 #+BEGIN_SRC emacs-lisp
   (use-package go-mode
     :ensure-system-package godef
-    :init
-    (setq compile-command "echo Building... && go build -v && echo Testing... && go test -v && echo Linter... && golint")
-    (setq compilation-read-command nil)
-    (add-hook 'go-mode-hook 'custom-go-mode)
+    :hook ((compilation-mode . my-compilation-hook)
+           (go-mode . my-go-mode-hook))
     :config
-    (setq compilation-scroll-output t)
-    (setq compilation-window-height 14)
+
+    ;; compilation
+    (setq compilation-read-command nil
+          compile-command "echo Building... && go build -v && echo Testing... && go test -v && echo Linter... && golint"
+          compilation-scroll-output t
+          compilation-window-height 14)
+
     (defun my-compilation-hook ()
       (when (not (get-buffer-window "*compilation*"))
         (save-selected-window
@@ -896,9 +926,36 @@ replace.
               (select-window w)
               (switch-to-buffer "*compilation*")
               (shrink-window (- h compilation-window-height)))))))
-    (add-hook 'compilation-mode-hook 'my-compilation-hook)
+
+    ;; hook to set company backends
+    (defun my-go-mode-hook()
+      (set (make-local-variable 'company-backends)
+           '((company-capf company-files :with company-yasnippet)
+             (company-dabbrev-code company-dabbrev)))
+      (setq tab-width 4))
+
+    ;; Set up before-save hooks to format buffer and add/delete imports.
+    ;; Make sure you don't have other gofmt/goimports hooks enabled.
+    (defun lsp-go-install-save-hooks ()
+      (add-hook 'before-save-hook #'lsp-format-buffer t t)
+      (add-hook 'before-save-hook #'lsp-organize-imports t t))
+    (add-hook 'go-mode-hook #'lsp-go-install-save-hooks)
+
+    ;; case insensitive for completion
+    (defun enable-filter-for-gopls()
+      (if (string-equal major-mode "go-mode")
+          (setq-local company-lsp-filter-candidates t)
+        (setq-local company-lsp-cache-candidates 'auto)))
+    (add-hook 'prog-mode-hook #'enable-filter-for-gopls)
+
     :bind (:map go-mode-map
                 ("C-h f" . godoc-at-point)))
+
+
+  ;; gotest: Emacs mode to go unit test command line tool
+  ;; https://github.com/nlamirault/gotest.el
+  (use-package gotest
+    :after go-mode)
 #+END_SRC
 
 ** LSP-mode
@@ -939,3 +996,12 @@ replace.
   ;; debugger for lsp
   (use-package dap-mode)
 #+end_src
+
+** Org-mode
+
+   Enable old '<se TAB' to insert source code block in org-mode
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-structure-template-alist '("el" . "src emacs-lisp"))
+  (add-to-list 'org-structure-template-alist '("sh" . "src sh"))
+  (require 'org-tempo)
+#+END_SRC
