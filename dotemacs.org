@@ -18,114 +18,118 @@ Some UI elements are rather invasive. No-mouse master race.
 Here are what I consider better defaults as per my own experience.
 
 #+BEGIN_SRC emacs-lisp
-  (setq-default
-   ;; ad-redefinition-action 'accept                   ; Silence warnings for redefinition
-   ;; auto-window-vscroll nil                          ; Lighten vertical scroll
-   ;; confirm-kill-emacs 'yes-or-no-p                  ; Confirm before exiting Emacs
-   cursor-in-non-selected-windows nil               ; Hide the cursor in inactive windows
-   delete-by-moving-to-trash t                      ; Delete files to trash
-   display-time-default-load-average nil            ; Don't display load average
-   display-time-format "%H:%M"                      ; Format the time string
-   display-time-mail-string ""                      ; Remove Mail from display-time
-   fill-column 80                                   ; Set width for automatic line breaks
-   help-window-select t                             ; Focus new help windows when opened
-   indent-tabs-mode nil                             ; Stop using tabs to indent
-   ;; inhibit-startup-screen t                         ; Disable start-up screen
-   initial-scratch-message ""                       ; Empty the initial *scratch* buffer
-   ;; mouse-yank-at-point t                            ; Yank at point rather than pointer
-   ns-use-srgb-colorspace nil                       ; Don't use sRGB colors
-   recenter-positions '(5 top bottom)               ; Set re-centering positions
-   scroll-conservatively most-positive-fixnum       ; Always scroll by one line
-   scroll-margin 10                                 ; Add a margin when scrolling vertically
-   select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
-   sentence-end-double-space nil                    ; End a sentence after a dot and a space
-   show-help-function nil                           ; Disable help messages
-   show-trailing-whitespace nil                     ; Display trailing whitespaces
-   split-height-threshold nil                       ; Disable vertical window splitting
-   split-width-threshold nil                        ; Disable horizontal window splitting
-   tab-width 2                                      ; Set width for tabs
-   uniquify-buffer-name-style 'forward              ; Uniquify buffer names
-   window-combination-resize t                      ; Resize windows proportionally
-   x-stretch-cursor t                              ; Stretch cursor to the glyph width
-   standard-indent 2
-   git-link-use-commit t
-   magit-diff-refine-hunk t
-   ispell-program-name "aspell"
-   load-prefer-newer t
-   ;; line-spacing 3
-   display-line-numbers-type 'relative               ; relative line number
-   display-line-numbers-current-absolute t           ; current line still show current line number
+    (setq-default
+     gc-cons-threshold 100000000
+     ;; ad-redefinition-action 'accept                   ; Silence warnings for redefinition
+     ;; auto-window-vscroll nil                          ; Lighten vertical scroll
+     ;; confirm-kill-emacs 'yes-or-no-p                  ; Confirm before exiting Emacs
+     cursor-in-non-selected-windows nil               ; Hide the cursor in inactive windows
+     delete-by-moving-to-trash t                      ; Delete files to trash
+     display-time-default-load-average nil            ; Don't display load average
+     display-time-format "%H:%M"                      ; Format the time string
+     display-time-mail-string ""                      ; Remove Mail from display-time
+     fill-column 80                                   ; Set width for automatic line breaks
+     help-window-select t                             ; Focus new help windows when opened
+     indent-tabs-mode nil                             ; Stop using tabs to indent
+     ;; inhibit-startup-screen t                         ; Disable start-up screen
+     initial-scratch-message ""                       ; Empty the initial *scratch* buffer
+     ;; mouse-yank-at-point t                            ; Yank at point rather than pointer
+     ns-use-srgb-colorspace nil                       ; Don't use sRGB colors
+     recenter-positions '(5 top bottom)               ; Set re-centering positions
+     scroll-conservatively most-positive-fixnum       ; Always scroll by one line
+     scroll-margin 10                                 ; Add a margin when scrolling vertically
+     select-enable-clipboard t                        ; Merge system's and Emacs' clipboard
+     sentence-end-double-space nil                    ; End a sentence after a dot and a space
+     show-help-function nil                           ; Disable help messages
+     show-trailing-whitespace nil                     ; Display trailing whitespaces
+     split-height-threshold nil                       ; Disable vertical window splitting
+     split-width-threshold nil                        ; Disable horizontal window splitting
+     tab-width 2                                      ; Set width for tabs
+     uniquify-buffer-name-style 'forward              ; Uniquify buffer names
+     window-combination-resize t                      ; Resize windows proportionally
+     x-stretch-cursor t                              ; Stretch cursor to the glyph width
+     standard-indent 2
+     git-link-use-commit t
+     magit-diff-refine-hunk t
+     ispell-program-name "aspell"
+     load-prefer-newer t
+     ;; line-spacing 3
+     display-line-numbers-type 'relative               ; relative line number
+     display-line-numbers-current-absolute t           ; current line still show current line number
 
-   ;; Indentation
-   typescript-indent-level 2
-   js2-basic-offset 2
-   js-indent-level 2
-   css-indent-offset 2
-   web-mode-markup-indent-offset 2
-   web-mode-css-indent-offset 2
-   web-mode-code-indent-offset 2
-   web-mode-attr-indent-offset 2
-   perl6-indent-offset 2
-   cperl-indent-level 2
-   c-basic-offset 2
-   sh-basic-offset 2
-   sh-indentation 2
-   smie-indent-basic 2
-   perl-indent-level 2)
-  (cd "~/")                                         ; Move to the user directory
-  (delete-selection-mode 1)                         ; Replace region when inserting text
-  (display-time-mode 1)                             ; Enable time in the mode-line
-  (fset 'yes-or-no-p 'y-or-n-p)                     ; Replace yes/no prompts with y/n
-  (global-subword-mode 1)                           ; Iterate through CamelCase words
-  (mouse-avoidance-mode 'exile)                    ; Avoid collision of mouse with point
-  (put 'downcase-region 'disabled nil)              ; Enable downcase-region
-  (put 'upcase-region 'disabled nil)                ; Enable upcase-region
-  (set-default-coding-systems 'utf-8)               ; Default to utf-8 encoding
-  (toggle-frame-maximized) ; Maximized screen
-  (defun my-backup-file-name (fpath)
-    "Return a new file path of a given file path.
-  If the new path's directories does not exist, create them."
-    (let* (
-           (backupRootDir "~/.emacs.d/backup/")
-           (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path, for example, “C:”
-           (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
-           )
-      (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
-      backupFilePath))
+     ;; Indentation
+     typescript-indent-level 2
+     js2-basic-offset 2
+     js-indent-level 2
+     css-indent-offset 2
+     web-mode-markup-indent-offset 2
+     web-mode-css-indent-offset 2
+     web-mode-code-indent-offset 2
+     web-mode-attr-indent-offset 2
+     perl6-indent-offset 2
+     cperl-indent-level 2
+     c-basic-offset 2
+     sh-basic-offset 2
+     sh-indentation 2
+     smie-indent-basic 2
+     perl-indent-level 2)
+    (cd "~/")                                         ; Move to the user directory
+    (delete-selection-mode 1)                         ; Replace region when inserting text
+    (display-time-mode 1)                             ; Enable time in the mode-line
+    (fset 'yes-or-no-p 'y-or-n-p)                     ; Replace yes/no prompts with y/n
+    (global-subword-mode 1)                           ; Iterate through CamelCase words
+    (mouse-avoidance-mode 'exile)                    ; Avoid collision of mouse with point
+    (put 'downcase-region 'disabled nil)              ; Enable downcase-region
+    (put 'upcase-region 'disabled nil)                ; Enable upcase-region
+    (set-default-coding-systems 'utf-8)               ; Default to utf-8 encoding
+    (toggle-frame-maximized) ; Maximized screen
+    (defun my-backup-file-name (fpath)
+      "Return a new file path of a given file path.
+    If the new path's directories does not exist, create them."
+      (let* (
+             (backupRootDir "~/.emacs.d/backup/")
+             (filePath (replace-regexp-in-string "[A-Za-z]:" "" fpath )) ; remove Windows driver letter in path, for example, “C:”
+             (backupFilePath (replace-regexp-in-string "//" "/" (concat backupRootDir filePath "~") ))
+             )
+        (make-directory (file-name-directory backupFilePath) (file-name-directory backupFilePath))
+        backupFilePath))
 
-  (setq version-control t     ;; Use version numbers for backups.
-        kept-new-versions 10  ;; Number of newest versions to keep.
-        kept-old-versions 0   ;; Number of oldest versions to keep.
-        delete-old-versions t ;; Don't ask to delete excess backup versions.
-        backup-by-copying t)  ;; Copy all files, don't rename them.
-  (setq vc-make-backup-files t)
+    (setq version-control t     ;; Use version numbers for backups.
+          kept-new-versions 10  ;; Number of newest versions to keep.
+          kept-old-versions 0   ;; Number of oldest versions to keep.
+          delete-old-versions t ;; Don't ask to delete excess backup versions.
+          backup-by-copying t)  ;; Copy all files, don't rename them.
+    (setq vc-make-backup-files t)
 
   ;; Default and per-save backups go here:
-  (setq backup-directory-alist '(("" . "~/.emacs.d/backup/per-save")))
+    (setq backup-directory-alist '(("" . "~/.emacs.d/backup/per-save")))
 
-  (defun force-backup-of-buffer ()
-    ;; Make a special "per session" backup at the first save of each
-    ;; emacs session.
-    (when (not buffer-backed-up)
-      ;; Override the default parameters for per-session backups.
-      (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
-            (kept-new-versions 3))
+  ;; Disable lockfiles to avoid react-scripts crashed
+    (setq create-lockfiles nil)
+
+    (defun force-backup-of-buffer ()
+      ;; Make a special "per session" backup at the first save of each
+      ;; emacs session.
+      (when (not buffer-backed-up)
+        ;; Override the default parameters for per-session backups.
+        (let ((backup-directory-alist '(("" . "~/.emacs.d/backup/per-session")))
+              (kept-new-versions 3))
+          (backup-buffer)))
+      ;; Make a "per save" backup on each save.  The first save results in
+      ;; both a per-session and a per-save backup, to keep the numbering
+      ;; of per-save backups consistent.
+      (let ((buffer-backed-up nil))
         (backup-buffer)))
-    ;; Make a "per save" backup on each save.  The first save results in
-    ;; both a per-session and a per-save backup, to keep the numbering
-    ;; of per-save backups consistent.
-    (let ((buffer-backed-up nil))
-      (backup-buffer)))
 
-  (add-hook 'before-save-hook  'force-backup-of-buffer)
+    (add-hook 'before-save-hook  'force-backup-of-buffer)
 
-  (setq make-backup-file-name-function 'my-backup-file-name)
+    (setq make-backup-file-name-function 'my-backup-file-name)
 
-  (global-hl-line-mode 1)
-  (global-auto-revert-mode 1)
-  ;(setq fringe-mode '(20 . 20)) ;; Fringe, left and right for the continuation characters
-  (set-fringe-mode nil)
-  (setq indicate-buffer-boundaries 'left)
+    (global-hl-line-mode 1)
+    (global-auto-revert-mode 1)
+    ;(setq fringe-mode '(20 . 20)) ;; Fringe, left and right for the continuation characters
+    (set-fringe-mode nil)
+    (setq indicate-buffer-boundaries 'left)
 #+END_SRC
 
 Clean up whitespace on save
@@ -264,6 +268,14 @@ Helps visually distinguish file-visiting windows from other types of windows (li
     (solaire-mode-swap-bg))
 #+END_SRC
 
+
+** Emojify
+
+#+BEGIN_SRC emacs-lisp
+  (use-package emojify
+    :ensure t
+    :hook (after-init . global-emojify-mode))
+#+END_SRC
 
 
 * General
@@ -508,6 +520,10 @@ binaries (see [[./README.org][README.org]]).
     (flycheck-check-syntax-automatically '(save mode-enabled))
     (flycheck-disabled-checkers '(emacs-lisp-checkdoc))
     (flycheck-display-errors-delay .3))
+
+  (use-package add-node-modules-path
+    :hook
+    ((flycheck-mode . add-node-modules-path)))
 #+END_SRC
 
 ** TODO Magit
@@ -530,6 +546,46 @@ binaries (see [[./README.org][README.org]]).
 
   :config
   (setq magit-last-seen-setup-instructions "1.4.0"))
+#+END_SRC
+
+** Markdown
+
+#+BEGIN_SRC emacs-lisp
+  (use-package markdown-mode
+    :ensure t
+    :mode ("\\.md\\'" . gfm-mode)
+    :commands (markdown-mode gfm-mode)
+    :config
+    (setq markdown-command "pandoc -t html5"))
+
+  (use-package simple-httpd
+    :ensure t
+    :config
+    (setq httpd-port 7070)
+    (setq httpd-host (system-name)))
+
+  (use-package impatient-mode
+    :ensure t
+    :commands impatient-mode)
+
+  (defun my-markdown-filter (buffer)
+    (princ
+     (with-temp-buffer
+       (let ((tmp (buffer-name)))
+         (set-buffer buffer)
+         (set-buffer (markdown tmp))
+         (format "<!DOCTYPE html><html><title>Markdown preview</title><link rel=\"stylesheet\" href = \"https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/3.0.1/github-markdown.min.css\"/>
+  <body><article class=\"markdown-body\" style=\"box-sizing: border-box;min-width: 200px;max-width: 980px;margin: 0 auto;padding: 45px;\">%s</article></body></html>" (buffer-string))))
+     (current-buffer)))
+
+  (defun my-markdown-preview ()
+    "Preview markdown."
+    (interactive)
+    (unless (process-status "httpd")
+      (httpd-start))
+    (impatient-mode)
+    (imp-set-user-filter 'my-markdown-filter)
+    (imp-visit-buffer))
 #+END_SRC
 
 ** Mode-Line
@@ -665,13 +721,13 @@ replace.
 #+BEGIN_SRC emacs-lisp
   (use-package projectile
     :hook
-    (after-init . projectile-global-mode)
+    (after-init . projectile-mode)
     :init
     (setq-default
      projectile-cache-file (expand-file-name ".projectile-cache" user-emacs-directory)
      projectile-known-projects-file (expand-file-name ".projectile-bookmarks" user-emacs-directory))
     (setq projectile-completion-system 'ivy
-          projectile-project-search-path '("~/github/" "~/zenius/"))
+          projectile-project-search-path '("~/github/" "/data/zenius/"))
     :custom
     (projectile-enable-caching t))
 #+END_SRC
@@ -746,6 +802,16 @@ replace.
     (setq undo-tree-history-directory-alist
           `((".*" . ,temporary-file-directory)))
     (setq undo-tree-auto-save-history t))
+#+END_SRC
+
+** Wakatime
+
+#+BEGIN_SRC emacs-lisp
+  (use-package wakatime-mode
+    :ensure t
+    :init
+    (global-wakatime-mode)
+    )
 #+END_SRC
 
 ** Which-key
@@ -879,11 +945,11 @@ replace.
 
 #+BEGIN_SRC emacs-lisp
   (use-package go-mode
-    :ensure-system-package godef
+    ;; :ensure-system-package godef
     :init
     (setq compile-command "echo Building... && go build -v && echo Testing... && go test -v && echo Linter... && golint")
     (setq compilation-read-command nil)
-    (add-hook 'go-mode-hook 'custom-go-mode)
+    ;; (add-hook 'go-mode-hook 'custom-go-mode)
     :config
     (setq compilation-scroll-output t)
     (setq compilation-window-height 14)
@@ -912,22 +978,30 @@ replace.
     ;; Enable lsp for the languages that do not have their own section yet
     :hook (sh-mode . lsp-deferred)
     :hook (python-mode . lsp-deferred)
-    :hook (css-mode . lsp-deferred)
-    :hook (html-mode . lsp-deferred)
+    ;; :hook (css-mode . lsp-deferred)
+    ;; :hook (html-mode . lsp-deferred)
     :hook (js2-mode . lsp-deferred)
     :hook (go-mode . lsp-deferred)
     :config
     (setq lsp-enable-snippet nil
           lsp-prefer-flymake nil
-          lsp-prefer-capf t
           read-process-output-max (* 1024 1024)
           lsp-ui-doc-position 'bottom
+          lsp-auto-guess-root t
+          lsp-enable-links nil
+          lsp-headerline-breadcrumb-enable nil
           ;; required to manually set path for bash-language-server executable
           ;; *TODO* improve this
-          exec-path (append exec-path '("~/.nvm/versions/node/v8.17.0/bin"))))
+          exec-path (append exec-path '("~/.nvm/versions/node/14.15.0/bin"))))
 
   (use-package lsp-ui
-    :commands lsp-ui-mode)
+    :commands lsp-ui-mode
+    :config
+    (setq lsp-ui-sideline-enable nil
+          lsp-ui-doc-enable t
+          lsp-ui-flycheck-enable nil
+          lsp-ui-imenu-enable t
+          lsp-ui-sideline-ignore-duplicate t))
 
   ;; if you are ivy user
   (use-package lsp-ivy
@@ -938,4 +1012,74 @@ replace.
 
   ;; debugger for lsp
   (use-package dap-mode)
+#+end_src
+
+** Web-dev
+
+#+begin_src emacs-lisp
+  ;; web-mode
+  (use-package web-mode
+    :ensure t
+    :init
+    (add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.[agj]sp\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.vue\\'" . web-mode))
+    (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+
+    (setq web-mode-style-padding 0)
+    (setq web-mode-script-padding 0))
+
+  (use-package rjsx-mode
+    :ensure t
+    :init
+    (add-to-list 'auto-mode-alist '("\\.js\\'"    . rjsx-mode)))
+
+  ;; emmet-mode
+  (use-package emmet-mode
+    :ensure t
+    :init
+    (add-hook 'sgml-mode-hook 'emmet-mode) ;; Auto-start on any markup modes
+    (add-hook 'css-mode-hook  'emmet-mode) ;; enable Emmet's css abbreviation.
+    (add-hook 'web-mode-hook  'emmet-mode)
+    (add-hook 'rjsx-mode-hook  'emmet-mode))
+
+  (use-package prettier-js
+    :ensure t
+    :init
+    (defun web-mode-init-prettier-hook ()
+      (add-node-modules-path)
+      (prettier-js-mode))
+    (add-hook 'js2-mode-hook 'web-mode-init-prettier-hook)
+    (add-hook 'rjsx-mode-hook 'web-mode-init-prettier-hook)
+    ;; (add-hook 'web-mode-hook 'prettier-js-mode)
+    (add-hook 'web-mode-hook  'web-mode-init-prettier-hook))
+
+  (use-package yasnippet
+    :ensure t
+    :hook (lsp-mode . yas-minor-mode))
+
+  (use-package js-react-redux-yasnippets
+    :ensure t
+    :after yasnippet ;; will not work if not adding this line
+    )
+#+end_src
+
+** Python
+
+#+begin_src emacs-lisp
+  (use-package python-mode
+    :ensure nil
+    :custom
+    (python-shell-interpreter "python3"))
+
+  (use-package lsp-python-ms
+    :ensure t
+    :init
+    (setq-default lsp-python-ms-extra-paths ["./api"])
+    (setq lsp-python-ms-auto-install-server t))
 #+end_src
