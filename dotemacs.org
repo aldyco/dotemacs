@@ -178,7 +178,7 @@ and =user-mail-address=. This is also where you want your API tokens to live.
 (defvar me/erc-port               nil        "The ERC port to use.")
 (defvar me/erc-server             nil        "The ERC server to use.")
 (defvar me/font-family            "JetBrains Mono"  "The font to use.")
-(defvar me/font-size-default      110        "The font size to use for default text.")
+(defvar me/font-size-default      120        "The font size to use for default text.")
 (defvar me/font-size-small        100        "The font size to use for smaller text.")
 
 (let ((secret.el (expand-file-name ".secret.el" user-emacs-directory)))
@@ -262,7 +262,6 @@ Helps visually distinguish file-visiting windows from other types of windows (li
   (use-package solaire-mode
     :hook
     ((change-major-mode after-revert ediff-prepare-buffer) . turn-on-solaire-mode)
-    (minibuffer-setup . solaire-mode-in-minibuffer)
     :config
     (solaire-global-mode +1)
     (solaire-mode-swap-bg))
@@ -831,15 +830,15 @@ replace.
     (setq undo-tree-auto-save-history t))
 #+END_SRC
 
-** Wakatime
+** COMMENT Wakatime
 
-#+BEGIN_SRC emacs-lisp
-  (use-package wakatime-mode
-    :ensure t
-    :init
-    (global-wakatime-mode)
-    )
-#+END_SRC
+ #+BEGIN_SRC emacs-lisp
+   (use-package wakatime-mode
+     :ensure t
+     :init
+     (global-wakatime-mode)
+     )
+ #+END_SRC
 
 ** Which-key
 
@@ -922,9 +921,9 @@ replace.
       (interactive "P")
       (declare-function persp--switch-buffer-ivy-counsel-helper "perspective.el")
       (declare-function persp-switch-to-buffer "perspective.el")
-      (persp--switch-buffer-ivy-counsel-helper arg nil #'(lambda () (let ((buffer (read-buffer-to-switch "Switch to buffer: ")))
+      (persp--switch-buffer-ivy-counsel-helper arg #'(lambda () (let ((buffer (read-buffer-to-switch "Switch to buffer: ")))
                                                                       (persp-switch-to-buffer buffer)))))
-    (define-key ivy-mode-map [remap switch-to-buffer] 'me/persp-ivy-switch-buffer))
+    (define-key ivy-mode-map [remap switch-to-buffer] 'persp-counsel-switch-buffer))
 #+END_SRC
 
 ** Persp-projectile
@@ -1051,7 +1050,7 @@ replace.
           lsp-headerline-breadcrumb-enable nil
           ;; required to manually set path for bash-language-server executable
           ;; *TODO* improve this
-          exec-path (append exec-path '("~/.nvm/versions/node/14.15.0/bin"))))
+          exec-path (append exec-path '("~/.nvm/versions/node/14.16.0/bin"))))
 
   (use-package lsp-ui
     :commands lsp-ui-mode
@@ -1070,7 +1069,21 @@ replace.
     :commands lsp-treemacs-errors-list)
 
   ;; debugger for lsp
-  (use-package dap-mode)
+  (use-package dap-mode
+    :config
+    (dap-register-debug-template
+     "Python :: Run debugger service-programs"
+     (list :type "python"
+           :cwd "/Users/aldyco/projects/sekolahmu/service-programs"
+           :module nil
+           :debugger 'debugpy
+           :name "Python :: Run debugger service-programs"
+           :program "/Users/aldyco/projects/sekolahmu/service-programs/api/manage.py"
+           :request "launch"
+           :console "integratedTerminal"
+           :env '(("DEBUG" . "1") ("DJANGO_SETTINGS_MODULE". "api.settings"))
+           :django t
+           :args "runserver 0:8000 --noreload")))
 #+end_src
 
 ** Web-dev
@@ -1134,13 +1147,23 @@ replace.
   (use-package python-mode
     :ensure nil
     :custom
-    (python-shell-interpreter "python3"))
+    (python-shell-interpreter "python3")
+    (dap-python-debugger 'debugpy)
+    (dap-python-executable "python3")
+    :config
+    (require 'dap-python))
 
   (use-package lsp-python-ms
     :ensure t
     :init
     (setq-default lsp-python-ms-extra-paths ["./api"])
     (setq lsp-python-ms-auto-install-server t))
+
+  (use-package pyvenv
+    :ensure t
+    :after python-mode
+    :config
+    (pyvenv-mode 1))
 #+end_src
 
 ** Org-mode
